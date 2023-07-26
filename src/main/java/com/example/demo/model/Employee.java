@@ -1,7 +1,18 @@
 package com.example.demo.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "employee")
 public class Employee {
 
+	 @Id
+	 @GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
 	private Integer employeeID;
 	private String firstName;
 	private String lastName;
@@ -9,6 +20,11 @@ public class Employee {
 	
 	
 	
+	public Employee() {
+		super();
+	}
+
+
 	public Employee(Integer employeeID, String firstName, String lastName, Integer salary) {
 		super();
 		this.employeeID = employeeID;
@@ -16,6 +32,18 @@ public class Employee {
 		this.lastName = lastName;
 		this.salary = salary;
 	}
+	
+	
+	public Integer getId() {
+		return id;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+
 	public Integer getEmployeeID() {
 		return employeeID;
 	}
