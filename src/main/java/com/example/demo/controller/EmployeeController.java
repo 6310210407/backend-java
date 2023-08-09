@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.StreamingHttpOutputMessage.Body;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +32,19 @@ public class EmployeeController {
 	private List<Employee> data = new ArrayList<Employee>();
 
 	@GetMapping("/employee")
-	public List<Employee> getEmployees(){
-		return employeeRepository.findAll();
+	public ResponseEntity<Object> getEmployees(){
+		
+		try {
+			List<Employee> employees = employeeRepository.findAll();
+			
+			return new ResponseEntity<>(employees,HttpStatus.OK);
+			
+		} catch (Exception e) {
+		   
+			return new ResponseEntity<>("Internal sever erorr", HttpStatus.INTERNAL_SERVER_ERROR );
+		}
+		
+		
 	}
        
 	@PostMapping("/employee")
