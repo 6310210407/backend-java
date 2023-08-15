@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.StreamingHttpOutputMessage.Body;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Employee;
+import com.example.demo.model.Role;
+import com.example.demo.model.Skill;
 import com.example.demo.repository.EmployeeRepository;
+import com.example.demo.repository.RoleRepository;
+import com.example.demo.repository.SkillRepository;
 
 @RestController
 public class EmployeeController {
@@ -30,6 +35,13 @@ public class EmployeeController {
 	EmployeeRepository employeeRepository;
 	
 	private List<Employee> data = new ArrayList<Employee>();
+	@Autowired
+    RoleRepository roleRepository;
+	
+	@Autowired
+	SkillRepository skillRepository;
+	
+	
 
 	@GetMapping("/employee")
 	public ResponseEntity<Object> getEmployees(){
@@ -51,9 +63,22 @@ public class EmployeeController {
 	public ResponseEntity<Object> adddEmployee(@RequestBody Employee body) {
 		
 		try {
+			
+			Optional<Role> role = roleRepository.findById(4);
+			
+			body.setRole(role.get());
 			Employee employee = employeeRepository.save(body);
+			for(Skill skill : body.getSkills()) {
+				
+				skill.setEmployee(employee);
+				
+				skillRepository.save(skill);
+				
+			}
+			
+			
 					return new ResponseEntity<>(employee,HttpStatus.CREATED);
-		} catch (Exception e) {
+		}catch (Exception e) {
 			return new ResponseEntity<>("Internal sever erorr", HttpStatus.INTERNAL_SERVER_ERROR );
 		}
 			
